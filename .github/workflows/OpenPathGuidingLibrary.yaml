@@ -1,0 +1,92 @@
+name: OpenPathGuidingLibrary
+
+on:
+  pull_request:
+
+env:
+  tag : v0.4.1-beta
+  filename_win: openpgl-win.zip
+  filename_lin: openpgl-lin.tgz
+  filename_mac: openpgl-mac.tgz
+
+jobs:
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - name: build
+        run: |
+          git clone https://github.com/OpenPathGuidingLibrary/openpgl.git -b ${{env.tag}}
+          cd openpgl
+          mkdir build
+          cd build
+          cmake ../superbuild -DCMAKE_INSTALL_PREFIX="../../tmp/openpgl" -G "Visual Studio 17 2022"
+          cmake --build . --config Release
+
+      - name: zip
+        run: |
+          dir tmp/openpgl
+          powershell compress-archive tmp/openpgl ${{env.filename_win}}
+
+      - name: upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{env.filename_win}}
+          asset_name: ${{env.filename_win}}
+          tag: ${{env.tag}}
+          overwrite: true
+          body: "[OpenPathGuidingLibrary](https://github.com/OpenPathGuidingLibrary/openpgl)"
+
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: build
+        run: |
+          git clone https://github.com/OpenPathGuidingLibrary/openpgl.git -b ${{env.tag}}
+          cd openpgl
+          mkdir build
+          cd build
+          cmake ../superbuild -DCMAKE_INSTALL_PREFIX="../../tmp/openpgl" -G "Unix Makefiles"
+          cmake --build . --config Release
+
+      - name: zip
+        run: |
+          cd tmp
+          tar cvfz ../${{env.filename_lin}} openpgl
+
+      - name: upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{env.filename_lin}}
+          asset_name: ${{env.filename_lin}}
+          tag: ${{env.tag}}
+          overwrite: true
+          body: "[OpenPathGuidingLibrary](https://github.com/OpenPathGuidingLibrary/openpgl)"
+
+  build-mac:
+    runs-on: macos-12
+    steps:
+      - name: build
+        run: |
+          git clone https://github.com/OpenPathGuidingLibrary/openpgl.git -b ${{env.tag}}
+          cd openpgl
+          mkdir build
+          cd build
+          cmake ../superbuild -DCMAKE_INSTALL_PREFIX="../../tmp/openpgl" -G "Xcode"
+          cmake --build . --config Release
+
+      - name: zip
+        run: |
+          cd tmp
+          tar cvfz ../${{env.filename_mac}} openpgl
+
+      - name: upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{env.filename_mac}}
+          asset_name: ${{env.filename_mac}}
+          tag: ${{env.tag}}
+          overwrite: true
+          body: "[OpenPathGuidingLibrary](https://github.com/OpenPathGuidingLibrary/openpgl)"
