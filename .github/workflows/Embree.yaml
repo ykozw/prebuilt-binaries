@@ -1,0 +1,49 @@
+name: Intel Embree
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+env:
+  tag : v0.4.1-beta
+
+jobs:
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - name: download
+        run: |
+          powershell wget https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-win.zip -OutFile tbb.zip
+          powershell wget https://github.com/embree/embree/archive/refs/tags/v3.13.5.zip -OutFile embree.zip
+          powershell Expand-Archive embree.zip -DestinationPath .
+          powershell Expand-Archive tbb.zip -DestinationPath .
+
+      - name: check
+        run: |
+          echo ${{ github.workspace }}/tbb
+          dir ${{ github.workspace }}/tbb
+
+      - name: build
+        run: |
+          cd embree-3.13.5
+          mkdir build
+          cd build
+          cmake .. -G "Visual Studio 17 2022" -DEMBREE_ISPC_SUPPORT=False -DEMBREE_TBB_ROOT=${{ github.workspace }}/tbb
+          cmake --build . --config Release
+          cmake --install . --prefix "../bin/"
+
+      - name: zip
+        run: |
+          powershell compress-archive embree-3.13.5/bin embree_win.zip
+
+      - name: upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: embree_win.zip
+          asset_name: embree_win.zip
+          tag: "windows"
+          overwrite: true
+          body: "[Intel Embree](https://github.com/embree/embree)"
+
+  
