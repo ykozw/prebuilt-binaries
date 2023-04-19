@@ -1,0 +1,51 @@
+name: Intel OpenImageDenoise
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+env:
+  tag : v0.4.1-beta
+
+jobs:
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: 'OpenImageDenoise/oidn'
+          ref: d959bac5b7130b31c41095811ddfbe58c4cf03f4
+          path: oidn
+          lfs: true
+          submodules: recursive
+
+      - name: download
+        run: |
+          powershell wget https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-win.zip -OutFile tbb.zip
+          powershell wget https://github.com/ispc/ispc/releases/download/v1.19.0/ispc-v1.19.0-windows.zip -OutFile ispc.zip
+          powershell Expand-Archive ispc.zip -DestinationPath .
+          powershell Expand-Archive tbb.zip -DestinationPath .
+
+      - name: build
+        run: |
+          cd oidn
+          mkdir build
+          cd build
+          cmake .. -G "Visual Studio 17 2022" -DTBB_ROOT="../../tbb/" -DISPC_EXECUTABLE="../../ispc-v1.19.0-windows/bin/ispc.exe"
+          cmake --build . --config Release
+          cmake --install . --prefix "../bin/"
+
+      - name: zip
+        run: |
+          powershell compress-archive oidn/bin oidn_win.zip
+
+      - name: upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: oidn_win.zip
+          asset_name: oidn_win.zip
+          tag: ${{ github.ref }}
+          release_name: "Intel OpenImageDenoise(v1.4.3) with TBB(2020.3u)"
+          overwrite: true
+          body: "[Intel OpenImageDenoise](https://github.com/OpenImageDenoise/oidn)"
