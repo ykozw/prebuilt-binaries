@@ -34,7 +34,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{env.filename_win}}
           asset_name: ${{env.filename_win}}
-          tag: ${{ github.ref }}
+          tag: OpenPathGuidingLibrary
           release_name: ${{env.release_name}}
           overwrite: true
           body: "[OpenPathGuidingLibrary](https://github.com/OpenPathGuidingLibrary/openpgl)"
@@ -62,7 +62,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{env.filename_lin}}
           asset_name: ${{env.filename_lin}}
-          tag: ${{ github.ref }}
+          tag: OpenPathGuidingLibrary
           release_name: ${{env.release_name}}
           overwrite: true
           body: "[OpenPathGuidingLibrary](https://github.com/OpenPathGuidingLibrary/openpgl)"
@@ -90,7 +90,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{env.filename_mac}}
           asset_name: ${{env.filename_mac}}
-          tag: ${{ github.ref }}
+          tag: OpenPathGuidingLibrary
           release_name: ${{env.release_name}}
           overwrite: true
           body: "[OpenPathGuidingLibrary](https://github.com/OpenPathGuidingLibrary/openpgl)"
