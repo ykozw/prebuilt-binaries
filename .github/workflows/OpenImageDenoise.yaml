@@ -2,7 +2,7 @@ name: Intel OpenImageDenoise
 
 on:
   workflow_dispatch:
-  pull_request:
+  #pull_request:
 
 env:
   tag : v0.4.1-beta
