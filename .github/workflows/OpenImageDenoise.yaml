@@ -45,7 +45,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: oidn_win.zip
           asset_name: oidn_win.zip
-          tag: dummy
+          tag: ${{ github.ref }}
           release_name: "Intel OpenImageDenoise(v1.4.3) with TBB(2020.3u)"
           overwrite: true
           body: "[Intel OpenImageDenoise](https://github.com/OpenImageDenoise/oidn)"
