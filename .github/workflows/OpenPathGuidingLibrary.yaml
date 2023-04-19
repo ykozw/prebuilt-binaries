@@ -8,6 +8,7 @@ env:
   filename_win: openpgl-win.zip
   filename_lin: openpgl-lin.tgz
   filename_mac: openpgl-mac.tgz
+  release_name: OpenPathGuidingLibrary(v0.4.1-beta)
 
 jobs:
   build-windows:
@@ -33,7 +34,8 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{env.filename_win}}
           asset_name: ${{env.filename_win}}
-          tag: ${{env.tag}}
+          tag: ${{ github.ref }}
+          release_name: ${{env.release_name}}
           overwrite: true
           body: "[OpenPathGuidingLibrary](https://github.com/OpenPathGuidingLibrary/openpgl)"
 
@@ -60,7 +62,8 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{env.filename_lin}}
           asset_name: ${{env.filename_lin}}
-          tag: ${{env.tag}}
+          tag: ${{ github.ref }}
+          release_name: ${{env.release_name}}
           overwrite: true
           body: "[OpenPathGuidingLibrary](https://github.com/OpenPathGuidingLibrary/openpgl)"
 
@@ -87,6 +90,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{env.filename_mac}}
           asset_name: ${{env.filename_mac}}
-          tag: ${{env.tag}}
+          tag: ${{ github.ref }}
+          release_name: ${{env.release_name}}
           overwrite: true
           body: "[OpenPathGuidingLibrary](https://github.com/OpenPathGuidingLibrary/openpgl)"
