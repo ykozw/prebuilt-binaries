@@ -37,7 +37,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: embree_win.zip
           asset_name: embree_win.zip
-          tag: ${{ github.ref }}
+          tag: IntelEmbree
           release_name: "Intel Embree(v3.13.5) with TBB(2020.3u)"
           overwrite: true
           body: "[Intel Embree](https://github.com/embree/embree)"
